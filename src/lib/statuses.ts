@@ -3,6 +3,7 @@ import { solution } from "./words";
 export type CharStatus = "absent" | "present" | "correct";
 
 export type CharValue =
+  | "ھ"
   | "پ"
   | "و"
   | "ي"
@@ -17,16 +18,19 @@ export type CharValue =
   | "ك"
   | "ج"
   | "ح"
+  | "ع"
   | "گ"
   | "ف"
   | "د"
   | "س"
   | "ا"
+  | "ء"
   | "م"
+  | "ڭ"
   | "ن"
   | "ب"
   | "ۆ"
-  | "ع"
+  | "چ"
   | "ش"
   | "ز";
 

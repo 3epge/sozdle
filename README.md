@@ -12,7 +12,7 @@ Clone the repository and perform the following command line actions:
 - npm install
 - npm run start
 
-# ءسوزدل - قازاقشا Wordle
+# ءسوزدىل - قازاقشا Wordle
 
 - اعىلشىن تىلىندەگى تۇپنۇسقاسىن [ويناۋ](https://www.nytimes.com/games/wordle/index.html)
 - قازاق كيريلليتساسىنداعى نۇسقاسىن [ويناۋ](https://wordle.kz)

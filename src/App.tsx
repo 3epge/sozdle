@@ -54,7 +54,7 @@ function App() {
         setIsGameLost(true);
         return setTimeout(() => {
           setIsGameLost(false);
-        }, 2000);
+        }, 5000);
       }
     }
   };
@@ -63,11 +63,11 @@ function App() {
     <div className="py-8 max-w-7xl mx-auto sm:px-6 lg:px-8">
       <Alert message="ءسوز تابىلمادى" isOpen={isWordNotFoundAlertOpen} />
       <Alert
-        message={`You lost, the word was ${solution}`}
+        message={`جەڭىلىپ قالدىڭىز. جاۋابى ${solution} بولعان.`}
         isOpen={isGameLost}
       />
       <div className="flex w-80 mx-auto items-center mb-8">
-        <h1 className="text-xl grow font-bold">ءسوزدل</h1>
+        <h1 className="text-xl grow font-bold">ءسوزدىل</h1>
         <InformationCircleIcon
           className="h-6 w-6 cursor-pointer"
           onClick={() => setIsInfoModalOpen(true)}
