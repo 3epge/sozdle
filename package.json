@@ -1,6 +1,6 @@
 {
-  "name": "wordle",
-  "version": "0.1.0",
+  "name": "sozdle",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "@headlessui/react": "^1.4.2",
@@ -47,5 +47,14 @@
     "autoprefixer": "^10.4.2",
     "postcss": "^8.4.5",
     "tailwindcss": "^3.0.12"
-  }
+  },
+  "description": "Kazakh Wordle",
+  "main": "postcss.config.js",
+  "keywords": [
+    "wordle",
+    "kazakh",
+    "sozdle"
+  ],
+  "author": "Zerde Turdybek",
+  "license": "ISC"
 }

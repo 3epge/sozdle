@@ -51,46 +51,66 @@ export const InfoModal = ({ isOpen, handleClose }: Props) => {
                     as="h3"
                     className="text-lg leading-6 font-medium text-gray-900"
                   >
-                    How to play
+                    ويىن ەرەجەسى
                   </Dialog.Title>
                   <div className="mt-2">
                     <p className="text-sm text-gray-500">
-                      Guess the WORDLE in 6 tries. After each guess, the color
-                      of the tiles will change to show how close your guess was
-                      to the word.
+                    ءسوزدل ءسوزىن 6 تالپىمىستا تابىڭىز. ءاربىر تالپىمىستان كەيىن شارشىلاردىڭ ءتۇسى وزگەرىپ، ءسىزدىڭ بولجامىڭىزدىڭ سوزگە قانشالىقتى جاقىن ەكەنىن كورسەتەدى.
                     </p>
 
                     <div className="flex justify-center mb-1 mt-4">
-                      <Cell value="W" status="correct" />
-                      <Cell value="E" />
-                      <Cell value="A" />
-                      <Cell value="R" />
-                      <Cell value="Y" />
+                      <Cell value="ز" status="correct" />
+                      <Cell value="ە" />
+                      <Cell value="ر" />
+                      <Cell value="د" />
+                      <Cell value="ە" />
                     </div>
                     <p className="text-sm text-gray-500">
-                      The letter W is in the word and in the correct spot.
+                    ز ءارپى ءسوز ىشىندە بار جانە ءوز ورنىندا تۇر.
                     </p>
 
                     <div className="flex justify-center mb-1 mt-4">
-                      <Cell value="P" />
-                      <Cell value="I" status="present" />
-                      <Cell value="L" />
-                      <Cell value="O" />
-                      <Cell value="T" />
+                      <Cell value="ع" />
+                      <Cell value="ا" status="present" />
+                      <Cell value="ل" />
+                      <Cell value="ى" />
+                      <Cell value="م" />
                     </div>
                     <p className="text-sm text-gray-500">
-                      The letter L is in the word but in the wrong spot.
+                    ا ءارپى ءسوز ىشىندە بار، الايدا تۇرعان جەرى قاتە.
                     </p>
 
                     <div className="flex justify-center mb-1 mt-4">
-                      <Cell value="V" />
-                      <Cell value="A" />
-                      <Cell value="G" />
-                      <Cell value="U" status="absent" />
-                      <Cell value="E" />
+                      <Cell value="ق" />
+                      <Cell value="و" />
+                      <Cell value="ب" />
+                      <Cell value="ى" status="absent" />
+                      <Cell value="ز" />
                     </div>
                     <p className="text-sm text-gray-500">
-                      The letter U is not in the word in any spot.
+                    ى ءارپى ءسوز ىشىندە جوق.
+                    </p>
+                  </div>
+                  <div className="mt-4">
+                    <p className="text-sm text-gray-500">
+                      {"ويىندى توتە جازۋعا "}
+                      <a
+                        href="https://github.com/3epge"
+                        className="underline font-bold"
+                      >
+                        {"زەردە تۇردىبەك"}
+                      </a>
+                      {" بەيىمدەگەن."}
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      {"باستاپقى كود "}
+                      <a
+                        href="https://github.com/thesam73/wordle"
+                        className="underline font-bold"
+                      >
+                        {"GitHub-تاعى Wordle"}
+                      </a>
+                      {"-دان كوشىرىلگەن."}
                     </p>
                   </div>
                 </div>

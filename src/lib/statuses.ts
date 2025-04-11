@@ -3,52 +3,63 @@ import { solution } from "./words";
 export type CharStatus = "absent" | "present" | "correct";
 
 export type CharValue =
-  | "Q"
-  | "W"
-  | "E"
-  | "R"
-  | "T"
-  | "Y"
-  | "U"
-  | "I"
-  | "O"
-  | "P"
-  | "A"
-  | "S"
-  | "D"
-  | "F"
-  | "G"
-  | "H"
-  | "J"
-  | "K"
-  | "L"
-  | "Z"
-  | "X"
-  | "C"
-  | "V"
-  | "B"
-  | "N"
-  | "M";
+  | "پ"
+  | "و"
+  | "ي"
+  | "ۇ"
+  | "ى"
+  | "ت"
+  | "ر"
+  | "ە"
+  | "ۋ"
+  | "ق"
+  | "ل"
+  | "ك"
+  | "ج"
+  | "ح"
+  | "گ"
+  | "ف"
+  | "د"
+  | "س"
+  | "ا"
+  | "م"
+  | "ن"
+  | "ب"
+  | "ۆ"
+  | "ع"
+  | "ش"
+  | "ز";
+
+// Helper function to properly split Arabic script words
+function splitWord(word: string): string[] {
+  const normalized = word.normalize('NFC');
+  // Split into array accounting for ligatures
+  return [...normalized];
+}
 
 export const getStatuses = (
   guesses: string[]
 ): { [key: string]: CharStatus } => {
   const charObj: { [key: string]: CharStatus } = {};
+  console.log(solution)
+  const normalizedSolution = solution.normalize('NFC');
+  console.log()
 
   guesses.forEach((word) => {
-    word.split("").forEach((letter, i) => {
-      if (!solution.includes(letter)) {
+    const normalizedGuess = word.normalize('NFC');
+    splitWord(normalizedGuess).forEach((letter, i) => {
+      if (!normalizedSolution.includes(letter)) {
         // make status absent
         return (charObj[letter] = "absent");
       }
 
-      if (letter === solution[i]) {
-        //make status correct
+      if (letter === normalizedSolution[i]) {
+        // make status correct
         return (charObj[letter] = "correct");
       }
 
       if (charObj[letter] !== "correct") {
-        //make status present
+        // make status present
         return (charObj[letter] = "present");
       }
     });
@@ -58,11 +69,13 @@ export const getStatuses = (
 };
 
 export const getGuessStatuses = (guess: string): CharStatus[] => {
-  const splitSolution = solution.split("");
-  const splitGuess = guess.split("");
+  const normalizedSolution = solution.normalize('NFC');
+  const normalizedGuess = guess.normalize('NFC');
+  
+  const splitSolution = splitWord(normalizedSolution);
+  const splitGuess = splitWord(normalizedGuess);
 
   const solutionCharsTaken = splitSolution.map((_) => false);
-
   const statuses: CharStatus[] = Array.from(Array(guess.length));
 
   // handle all correct cases first

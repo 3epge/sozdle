@@ -9,13 +9,14 @@ export const isWinningWord = (word: string) => {
 };
 
 export const getWordOfDay = () => {
-  // January 1, 2022 Game Epoch
-  const epochMs = 1641013200000;
+  // Apr 11, 2025 Game Epoch (in milliseconds)
+  const epochMs = 1744300800000;
   const now = Date.now();
   const msInDay = 86400000;
   const index = Math.floor((now - epochMs) / msInDay);
 
-  return WORDS[index].toUpperCase();
+  const safeIndex = index % WORDS.length;
+  return WORDS[Math.abs(safeIndex)];
 };
 
 export const solution = getWordOfDay();
