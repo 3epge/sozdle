@@ -1,5 +1,6 @@
 {
   "name": "sozdle",
+  "description": "Kazakh Wordle in Arabic Script - Adapted from the original Wordle clone",
   "version": "1.0.0",
   "private": true,
   "dependencies": {
@@ -48,13 +49,19 @@
     "postcss": "^8.4.5",
     "tailwindcss": "^3.0.12"
   },
-  "description": "Kazakh Wordle",
   "main": "postcss.config.js",
   "keywords": [
     "wordle",
     "kazakh",
     "sozdle"
   ],
-  "author": "Zerde Turdybek",
-  "license": "ISC"
+  "author": "Zerde Turdybek <3epge@proton.me> (https://3epge.com)",
+  "contributors": [
+    "Hannah Park (https://www.hannahmariepark.com)"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/3epge/sozdle.git"
+  }
 }
