@@ -7,65 +7,107 @@ import { InfoModal } from "./components/modals/InfoModal";
 import { WinModal } from "./components/modals/WinModal";
 import { isWordInWordList, isWinningWord, solution } from "./lib/words";
 
+type GameStateType = {
+  guesses: string[];
+  isGameWon: boolean;
+  isGameLost: boolean;
+  solution: string;
+};
+
+const GAME_STATE_KEY = "sozdleGameState";
+const LAST_PLAYED_KEY = "lastPlayedDate";
+
+const initialGameState: GameStateType = {
+  guesses: [],
+  isGameWon: false,
+  isGameLost: false,
+  solution,
+};
+
 function App() {
-  const [guesses, setGuesses] = useState<string[]>([]);
+  const [gameState, setGameState] = useState<GameStateType>(() => {
+    const saved = localStorage.getItem(GAME_STATE_KEY);
+    return saved ? { ...initialGameState, ...JSON.parse(saved) } : initialGameState;
+  });
+
   const [currentGuess, setCurrentGuess] = useState("");
-  const [isGameWon, setIsGameWon] = useState(false);
   const [isWinModalOpen, setIsWinModalOpen] = useState(false);
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
   const [isWordNotFoundAlertOpen, setIsWordNotFoundAlertOpen] = useState(false);
-  const [isGameLost, setIsGameLost] = useState(false);
 
   useEffect(() => {
-    if (isGameWon) {
+    localStorage.setItem(GAME_STATE_KEY, JSON.stringify(gameState));
+  }, [gameState]);
+
+  useEffect(() => {
+    const today = new Date().toLocaleDateString();
+    const lastPlayedDate = localStorage.getItem(LAST_PLAYED_KEY);
+
+    if (lastPlayedDate !== today) {
+      setGameState(initialGameState);
+      setCurrentGuess("");
+      localStorage.setItem(LAST_PLAYED_KEY, today);
+      localStorage.removeItem(GAME_STATE_KEY);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (gameState.isGameWon) {
       setIsWinModalOpen(true);
     }
-  }, [isGameWon]);
+  }, [gameState.isGameWon]);
 
   const onChar = (value: string) => {
-    if (currentGuess.length < 5 && guesses.length < 6) {
-      setCurrentGuess(`${currentGuess}${value}`);
+    if (
+      gameState.isGameWon ||
+      gameState.isGameLost ||
+      gameState.guesses.length >= 6 ||
+      currentGuess.length >= 5
+    ) {
+      return;
     }
+    setCurrentGuess((prev) => prev + value);
   };
 
   const onDelete = () => {
-    setCurrentGuess(currentGuess.slice(0, -1));
+    if (gameState.isGameWon || gameState.isGameLost || !currentGuess) {
+      return;
+    }
+    setCurrentGuess((prev) => prev.slice(0, -1));
   };
 
   const onEnter = () => {
+    if (
+      gameState.isGameWon ||
+      gameState.isGameLost ||
+      currentGuess.length !== 5 ||
+      gameState.guesses.length >= 6
+    ) {
+      return;
+    }
+
     if (!isWordInWordList(currentGuess)) {
       setIsWordNotFoundAlertOpen(true);
-      return setTimeout(() => {
-        setIsWordNotFoundAlertOpen(false);
-      }, 2000);
+      setTimeout(() => setIsWordNotFoundAlertOpen(false), 2000);
+      return;
     }
 
-    const winningWord = isWinningWord(currentGuess);
+    const newGuesses = [...gameState.guesses, currentGuess];
+    const isWin = isWinningWord(currentGuess);
+    const isLoss = newGuesses.length === 6 && !isWin;
 
-    if (currentGuess.length === 5 && guesses.length < 6 && !isGameWon) {
-      setGuesses([...guesses, currentGuess]);
-      setCurrentGuess("");
-
-      if (winningWord) {
-        return setIsGameWon(true);
-      }
-
-      if (guesses.length === 5) {
-        setIsGameLost(true);
-        return setTimeout(() => {
-          setIsGameLost(false);
-        }, 5000);
-      }
-    }
+    setGameState((prev) => ({
+      ...prev,
+      guesses: newGuesses,
+      isGameWon: isWin,
+      isGameLost: isLoss,
+    }));
+    setCurrentGuess("");
   };
 
   return (
     <div className="py-8 max-w-7xl mx-auto sm:px-6 lg:px-8">
       <Alert message="ءسوز تابىلمادى" isOpen={isWordNotFoundAlertOpen} />
-      <Alert
-        message={`جەڭىلىپ قالدىڭىز. جاۋابى ${solution} بولعان.`}
-        isOpen={isGameLost}
-      />
       <div className="flex w-80 mx-auto items-center mb-8">
         <h1 className="text-xl grow font-bold">ءسوزدىل</h1>
         <InformationCircleIcon
@@ -73,17 +115,36 @@ function App() {
           onClick={() => setIsInfoModalOpen(true)}
         />
       </div>
-      <Grid guesses={guesses} currentGuess={currentGuess} />
+      {gameState.isGameLost && (
+        <div className="flex items-end justify-center mb-2">
+          <div className="bg-gray-800 text-white py-2 px-4 rounded">{gameState.solution}</div>
+        </div>
+      )}
+      <Grid guesses={gameState.guesses} currentGuess={currentGuess} />
       <Keyboard
         onChar={onChar}
         onDelete={onDelete}
         onEnter={onEnter}
-        guesses={guesses}
+        guesses={gameState.guesses}
       />
+      <div className="flex items-end justify-center mt-4">
+        <p className="text-sm text-gray-500">
+          {"ويىندى توتە جازۋعا "}
+          <a
+            href="https://www.instagram.com/3epge/"
+            className="underline font-bold"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {"تۇردىبەك زەردە"}
+          </a>
+          {" بەيىمدەگەن."}
+        </p>
+      </div>
       <WinModal
         isOpen={isWinModalOpen}
         handleClose={() => setIsWinModalOpen(false)}
-        guesses={guesses}
+        guesses={gameState.guesses}
       />
       <InfoModal
         isOpen={isInfoModalOpen}

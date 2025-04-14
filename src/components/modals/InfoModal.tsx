@@ -15,7 +15,7 @@ export const InfoModal = ({ isOpen, handleClose }: Props) => {
         className="fixed z-10 inset-0 overflow-y-auto"
         onClose={handleClose}
       >
-        <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+        <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"
@@ -70,38 +70,28 @@ export const InfoModal = ({ isOpen, handleClose }: Props) => {
                     </p>
 
                     <div className="flex justify-center mb-1 mt-4">
-                      <Cell value="ع" />
-                      <Cell value="ا" status="present" />
-                      <Cell value="ل" />
-                      <Cell value="ى" />
-                      <Cell value="م" />
+                      <Cell value="ق" />
+                      <Cell value="ى" status="present" />
+                      <Cell value="ر" />
+                      <Cell value="ا" />
+                      <Cell value="ن" />
                     </div>
                     <p className="text-sm text-gray-500">
-                    ا ءارپى ءسوز ىشىندە بار، الايدا تۇرعان جەرى قاتە.
+                    ى ءارپى ءسوز ىشىندە بار، الايدا تۇرعان جەرى قاتە.
                     </p>
 
                     <div className="flex justify-center mb-1 mt-4">
-                      <Cell value="ق" />
-                      <Cell value="و" />
-                      <Cell value="ب" />
+                      <Cell value="ء" />
+                      <Cell value="ا" />
+                      <Cell value="ت" />
                       <Cell value="ى" status="absent" />
-                      <Cell value="ز" />
+                      <Cell value="ر" />
                     </div>
                     <p className="text-sm text-gray-500">
                     ى ءارپى ءسوز ىشىندە جوق.
                     </p>
                   </div>
-                  <div className="mt-4">
-                    <p className="text-sm text-gray-500">
-                      {"ويىندى توتە جازۋعا "}
-                      <a
-                        href="https://github.com/3epge"
-                        className="underline font-bold"
-                      >
-                        {"زەردە تۇردىبەك"}
-                      </a>
-                      {" بەيىمدەگەن."}
-                    </p>
+                  <div className="mt-6">
                     <p className="text-sm text-gray-500">
                       {"باستاپقى كود "}
                       <a

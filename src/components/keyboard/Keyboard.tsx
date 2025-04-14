@@ -11,7 +11,6 @@ type Props = {
 
 export const Keyboard = ({ onChar, onDelete, onEnter, guesses }: Props) => {
   const charStatuses = getStatuses(guesses);
-  console.log(charStatuses);
 
   const onClick = (value: KeyValue) => {
     if (value === "ENTER") {
@@ -24,7 +23,7 @@ export const Keyboard = ({ onChar, onDelete, onEnter, guesses }: Props) => {
   };
 
   return (
-    <div>
+    <div className="px-2">
       <div className="flex justify-center mb-1">
         <Key value="ھ" onClick={onClick} status={charStatuses["ھ"]} />
         <Key value="پ" onClick={onClick} status={charStatuses["پ"]} />

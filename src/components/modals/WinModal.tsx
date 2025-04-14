@@ -1,7 +1,15 @@
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { CheckIcon } from "@heroicons/react/outline";
 import { MiniGrid } from "../mini-grid/MiniGrid";
+import { getGuessStatuses } from "../../lib/statuses";
+
+const emojiMap = {
+  correct: '🟩',
+  present: '🟨',
+  absent: '⬜',
+};
+
 
 type Props = {
   isOpen: boolean;
@@ -10,6 +18,29 @@ type Props = {
 };
 
 export const WinModal = ({ isOpen, handleClose, guesses }: Props) => {
+  const [isCopied, setIsCopied] = useState(false);
+
+  const handleShare = () => {
+    const emojiResults = guesses.map(guess => {
+      const statuses = getGuessStatuses(guess);
+      return statuses.reverse().map(status => emojiMap[status]).join('');
+    }).join('\n');
+
+    const shareText = `ءسوزدىل ${guesses.length}/6\n\n${emojiResults}\n\nsozdle.3epge.com`;
+
+    navigator.clipboard.writeText(shareText).then(() => {
+      setIsCopied(true);
+    }).catch(() => {
+      const textArea = document.createElement('textarea');
+      textArea.value = shareText;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      setIsCopied(true);
+    });
+  }
+
   return (
     <Transition.Root show={isOpen} as={Fragment}>
       <Dialog
@@ -17,7 +48,7 @@ export const WinModal = ({ isOpen, handleClose, guesses }: Props) => {
         className="fixed z-10 inset-0 overflow-y-auto"
         onClose={handleClose}
       >
-        <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+        <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"
@@ -46,7 +77,7 @@ export const WinModal = ({ isOpen, handleClose, guesses }: Props) => {
             leaveFrom="opacity-100 translate-y-0 sm:scale-100"
             leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
           >
-            <div className="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-sm sm:w-full sm:p-6">
+            <div className="inline-block align-bottom bg-white rounded-lg px-12 pt-6 pb-6 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-sm sm:w-full sm:p-6">
               <div>
                 <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
                   <CheckIcon
@@ -70,7 +101,16 @@ export const WinModal = ({ isOpen, handleClose, guesses }: Props) => {
               <div className="mt-5 sm:mt-6">
                 <button
                   type="button"
-                  className="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:text-sm"
+                  className="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:text-sm"
+                  onClick={handleShare}
+                >
+                  {isCopied ? "كوشىرىلدى!" : "ناتيجەمەن ءبولىسۋ"}
+                </button>
+              </div>
+              <div className="mt-2 sm:mt-2">
+                <button
+                  type="button"
+                  className="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-gray-200 text-base font-medium text-black hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-100 sm:text-sm"
                   onClick={handleClose}
                 >
                   {"شىعۋ"}

@@ -34,10 +34,9 @@ export type CharValue =
   | "ش"
   | "ز";
 
-// Helper function to properly split Arabic script words
+
 function splitWord(word: string): string[] {
   const normalized = word.normalize('NFC');
-  // Split into array accounting for ligatures
   return [...normalized];
 }
 
@@ -45,9 +44,7 @@ export const getStatuses = (
   guesses: string[]
 ): { [key: string]: CharStatus } => {
   const charObj: { [key: string]: CharStatus } = {};
-  console.log(solution)
   const normalizedSolution = solution.normalize('NFC');
-  console.log()
 
   guesses.forEach((word) => {
     const normalizedGuess = word.normalize('NFC');
