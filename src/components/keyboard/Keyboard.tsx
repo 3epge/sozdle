@@ -1,5 +1,6 @@
+import { useEffect, useState } from "react";
 import { KeyValue } from "../../lib/keyboard";
-import { getStatuses } from "../../lib/statuses";
+import { CharStatus, getStatuses } from "../../lib/statuses";
 import { Key } from "./Key";
 
 type Props = {
@@ -10,7 +11,24 @@ type Props = {
 };
 
 export const Keyboard = ({ onChar, onDelete, onEnter, guesses }: Props) => {
-  const charStatuses = getStatuses(guesses);
+  const [charStatuses, setCharStatuses] = useState<{ [key: string]: CharStatus } | null>(null);
+
+  useEffect(() => {
+    async function fetchStatuses() {
+      try {
+        const result = await getStatuses(guesses);
+        setCharStatuses(result);
+      } catch (error) {
+        console.error('Failed to fetch charStatuses:', error);
+        setCharStatuses({});
+      }
+    }
+    fetchStatuses();
+  }, [guesses]);
+
+  if (!charStatuses) {
+    return <div className="flex justify-center mb-1">Loading...</div>;
+  }
 
   const onClick = (value: KeyValue) => {
     if (value === "ENTER") {

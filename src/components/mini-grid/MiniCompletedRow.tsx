@@ -1,4 +1,5 @@
-import { getGuessStatuses } from "../../lib/statuses";
+import { useEffect, useState } from "react";
+import { CharStatus, getGuessStatuses } from "../../lib/statuses";
 import { MiniCell } from "./MiniCell";
 
 type Props = {
@@ -6,7 +7,24 @@ type Props = {
 };
 
 export const MiniCompletedRow = ({ guess }: Props) => {
-  const statuses = getGuessStatuses(guess);
+  const [statuses, setStatuses] = useState<CharStatus[] | null>(null);
+  
+    useEffect(() => {
+      async function fetchStatuses() {
+        try {
+          const result = await getGuessStatuses(guess);
+          setStatuses(result);
+        } catch (error) {
+          console.error('Failed to fetch statuses:', error);
+          setStatuses([]);
+        }
+      }
+      fetchStatuses();
+    }, [guess]);
+  
+    if (!statuses) {
+      return <div className="flex justify-center mb-1">Loading...</div>;
+    }
 
   return (
     <div className="flex justify-center mb-1">

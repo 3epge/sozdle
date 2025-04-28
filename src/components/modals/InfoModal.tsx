@@ -70,14 +70,14 @@ export const InfoModal = ({ isOpen, handleClose }: Props) => {
                     </p>
 
                     <div className="flex justify-center mb-1 mt-4">
-                      <Cell value="ق" />
-                      <Cell value="ى" status="present" />
-                      <Cell value="ر" />
+                      <Cell value="ا" />
+                      <Cell value="ر" status="present" />
+                      <Cell value="ل" />
                       <Cell value="ا" />
                       <Cell value="ن" />
                     </div>
                     <p className="text-sm text-gray-500">
-                    ى ءارپى ءسوز ىشىندە بار، الايدا تۇرعان جەرى قاتە.
+                    ر ءارپى ءسوز ىشىندە بار، الايدا تۇرعان جەرى قاتە.
                     </p>
 
                     <div className="flex justify-center mb-1 mt-4">

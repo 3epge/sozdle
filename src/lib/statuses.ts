@@ -1,4 +1,4 @@
-import { solution } from "./words";
+import { getSolution } from "./words";
 
 export type CharStatus = "absent" | "present" | "correct";
 
@@ -40,10 +40,11 @@ function splitWord(word: string): string[] {
   return [...normalized];
 }
 
-export const getStatuses = (
+export const getStatuses = async (
   guesses: string[]
-): { [key: string]: CharStatus } => {
+): Promise<{ [key: string]: CharStatus }> => {
   const charObj: { [key: string]: CharStatus } = {};
+  const solution = await getSolution();
   const normalizedSolution = solution.normalize('NFC');
 
   guesses.forEach((word) => {
@@ -69,7 +70,8 @@ export const getStatuses = (
   return charObj;
 };
 
-export const getGuessStatuses = (guess: string): CharStatus[] => {
+export const getGuessStatuses = async (guess: string): Promise<CharStatus[]> => {
+  const solution = await getSolution();
   const normalizedSolution = solution.normalize('NFC');
   const normalizedGuess = guess.normalize('NFC');
   

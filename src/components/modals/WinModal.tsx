@@ -1,6 +1,6 @@
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { CheckIcon } from "@heroicons/react/outline";
+import { EmojiHappyIcon } from "@heroicons/react/outline";
 import { MiniGrid } from "../mini-grid/MiniGrid";
 import { getGuessStatuses } from "../../lib/statuses";
 
@@ -19,12 +19,40 @@ type Props = {
 
 export const WinModal = ({ isOpen, handleClose, guesses }: Props) => {
   const [isCopied, setIsCopied] = useState(false);
+  const [timeLeft, setTimeLeft] = useState<string>('');
 
-  const handleShare = () => {
-    const emojiResults = guesses.map(guess => {
-      const statuses = getGuessStatuses(guess);
-      return statuses.reverse().map(status => emojiMap[status]).join('');
-    }).join('\n');
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const updateTimer = () => {
+      const now = new Date();
+      const tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+      const msLeft = tomorrow.getTime() - now.getTime();
+      
+      if (msLeft <= 0) {
+        setTimeLeft('00:00:00');
+        return;
+      }
+
+      const hours = Math.floor(msLeft / (1000 * 60 * 60)).toString().padStart(2, '0');
+      const minutes = Math.floor((msLeft % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
+      const seconds = Math.floor((msLeft % (1000 * 60)) / 1000).toString().padStart(2, '0');
+      setTimeLeft(`${hours}:${minutes}:${seconds}`);
+    };
+
+    updateTimer();
+    const intervalId = setInterval(updateTimer, 1000);
+
+    return () => clearInterval(intervalId);
+  }, [isOpen]);
+
+  const handleShare = async () => {
+    const emojiResults = await Promise.all(
+      guesses.map(async (guess) => {
+        const statuses = await getGuessStatuses(guess);
+        return statuses.reverse().map(status => emojiMap[status]).join('');
+      })
+    ).then(results => results.join('\n'));
 
     const shareText = `ءسوزدىل ${guesses.length}/6\n\n${emojiResults}\n\nsozdle.3epge.com`;
 
@@ -80,7 +108,7 @@ export const WinModal = ({ isOpen, handleClose, guesses }: Props) => {
             <div className="inline-block align-bottom bg-white rounded-lg px-12 pt-6 pb-6 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-sm sm:w-full sm:p-6">
               <div>
                 <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
-                  <CheckIcon
+                  <EmojiHappyIcon
                     className="h-6 w-6 text-green-600"
                     aria-hidden="true"
                   />
@@ -94,7 +122,8 @@ export const WinModal = ({ isOpen, handleClose, guesses }: Props) => {
                   </Dialog.Title>
                   <div className="mt-2">
                     <MiniGrid guesses={guesses} />
-                    <p className="text-sm text-gray-500">{"جاۋابىن دۇرىس تاپتىڭىز."}</p>
+                    <p className="text-sm text-gray-500">{"كەلەسى ويىنعا دەيىنگى ۋاقىت:"}</p>
+                    <p className="text-lg font-medium text-gray-900">{timeLeft || '00:00:00'}</p>
                   </div>
                 </div>
               </div>

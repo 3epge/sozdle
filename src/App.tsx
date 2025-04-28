@@ -5,7 +5,8 @@ import { Grid } from "./components/grid/Grid";
 import { Keyboard } from "./components/keyboard/Keyboard";
 import { InfoModal } from "./components/modals/InfoModal";
 import { WinModal } from "./components/modals/WinModal";
-import { isWordInWordList, isWinningWord, solution } from "./lib/words";
+import NotFoundModal from "./components/modals/NotFoundModal";
+import { isWordInWordList, isWinningWord, getSolution } from "./lib/words";
 
 type GameStateType = {
   guesses: string[];
@@ -21,7 +22,7 @@ const initialGameState: GameStateType = {
   guesses: [],
   isGameWon: false,
   isGameLost: false,
-  solution,
+  solution: "",
 };
 
 function App() {
@@ -33,7 +34,20 @@ function App() {
   const [currentGuess, setCurrentGuess] = useState("");
   const [isWinModalOpen, setIsWinModalOpen] = useState(false);
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
-  const [isWordNotFoundAlertOpen, setIsWordNotFoundAlertOpen] = useState(false);
+  const [isNotFoundModalOpen, setIsNotFoundModalOpen] = useState(false);
+  const [isWordSubmittedAlertOpen, setIsWordSubmittedAlertOpen] = useState(false);
+
+  useEffect(() => {
+    async function fetchSolution() {
+      try {
+        const sol = await getSolution();
+        setGameState((prev) => ({ ...prev, solution: sol }));
+      } catch (error) {
+        console.error('Failed to fetch solution:', error);
+      }
+    }
+    fetchSolution();
+  }, []);
 
   useEffect(() => {
     localStorage.setItem(GAME_STATE_KEY, JSON.stringify(gameState));
@@ -52,10 +66,10 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (gameState.isGameWon) {
+    if (gameState.isGameWon && gameState.guesses.length > 0) {
       setIsWinModalOpen(true);
     }
-  }, [gameState.isGameWon]);
+  }, [gameState.isGameWon, gameState.guesses]);
 
   const onChar = (value: string) => {
     if (
@@ -76,7 +90,7 @@ function App() {
     setCurrentGuess((prev) => prev.slice(0, -1));
   };
 
-  const onEnter = () => {
+  const onEnter = async () => {
     if (
       gameState.isGameWon ||
       gameState.isGameLost ||
@@ -86,14 +100,14 @@ function App() {
       return;
     }
 
-    if (!isWordInWordList(currentGuess)) {
-      setIsWordNotFoundAlertOpen(true);
-      setTimeout(() => setIsWordNotFoundAlertOpen(false), 2000);
+    const isValidWord = await isWordInWordList(currentGuess);
+    if (!isValidWord) {
+      setIsNotFoundModalOpen(true);
       return;
     }
 
     const newGuesses = [...gameState.guesses, currentGuess];
-    const isWin = isWinningWord(currentGuess);
+    const isWin = await isWinningWord(currentGuess);
     const isLoss = newGuesses.length === 6 && !isWin;
 
     setGameState((prev) => ({
@@ -105,9 +119,17 @@ function App() {
     setCurrentGuess("");
   };
 
+  const handleSubmit = () => {
+    setIsNotFoundModalOpen(false);
+    setCurrentGuess("");
+    setIsWordSubmittedAlertOpen(true);
+    const timeoutId = setTimeout(() => setIsWordSubmittedAlertOpen(false), 3000);
+    return () => clearTimeout(timeoutId);
+  };
+
   return (
     <div className="py-8 max-w-7xl mx-auto sm:px-6 lg:px-8">
-      <Alert message="ءسوز تابىلمادى" isOpen={isWordNotFoundAlertOpen} />
+      <Alert message="ۇلەس قوسقانىڭىزعا راحمەت! جاقىن ارادا سوزدەر تىزىمىنە قوسامىن." isOpen={isWordSubmittedAlertOpen} />
       <div className="flex w-80 mx-auto items-center mb-8">
         <h1 className="text-xl grow font-bold">ءسوزدىل</h1>
         <InformationCircleIcon
@@ -128,19 +150,25 @@ function App() {
         guesses={gameState.guesses}
       />
       <div className="flex items-end justify-center mt-4">
-        <p className="text-sm text-gray-500">
-          {"ويىندى توتە جازۋعا "}
+        <p dir="ltr" className="text-sm text-gray-500">
+          {"Oiyndy töte jazuğa "}
           <a
             href="https://www.instagram.com/3epge/"
             className="underline font-bold"
             target="_blank"
             rel="noopener noreferrer"
           >
-            {"تۇردىبەك زەردە"}
+            {"Tūrdybek Zerde"}
           </a>
-          {" بەيىمدەگەن."}
+          {" beiımdegen."}
         </p>
       </div>
+      <NotFoundModal
+        isOpen={isNotFoundModalOpen}
+        handleClose={() => setIsNotFoundModalOpen(false)}
+        currentGuess={currentGuess}
+        onSubmit={handleSubmit}
+      />
       <WinModal
         isOpen={isWinModalOpen}
         handleClose={() => setIsWinModalOpen(false)}
