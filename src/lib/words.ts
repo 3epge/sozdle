@@ -6,11 +6,7 @@ async function fetchWordList(): Promise<string[]> {
     return wordList;
   }
   try {
-    const response = await fetch(
-      process.env.NODE_ENV === 'production'
-        ? 'https://sozdle.3epge.com/api/approved-words'
-        : 'http://localhost:4200/api/approved-words'
-    );
+    const response = await fetch('https://sozdle.3epge.com/api/approved-words');
     if (!response.ok) {
       throw new Error('Failed to fetch word list');
     }

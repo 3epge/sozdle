@@ -18,9 +18,7 @@ const NotFoundModal = ({ isOpen, handleClose, currentGuess, onSubmit }: Props) =
 
         try {
             const response = await fetch(
-                process.env.NODE_ENV === 'production'
-                    ? 'https://sozdle.3epge.com/api/new-word'
-                    : 'http://localhost:4200/api/new-word',
+                'https://sozdle.3epge.com/api/new-word',
                 {
                     method: 'POST',
                     headers: {
